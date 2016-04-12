@@ -4,17 +4,23 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>RockLee&#39;s blog</title>
+  <title>Java虚拟机运行时的内存区域 | RockLee&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="RockLee's blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="知识需要总结，不能单纯的只看书，不能单纯的只记笔记，要想办法把书里的语言转换为自己的语言，然后表达出来。在这个过程中，会发现很多自己理解上的错误和欠缺：）
+一.Java概述　　Java是一种技术体系，具体来讲，我们将Java程序设计语言、Java虚拟机、Java API类库这三部分统称为JDK（Java Development Kit），因为JDK是用于支持Java程序开发的最小环境，所以有时候">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java虚拟机运行时的内存区域">
+<meta property="og:url" content="http://yoursite.com/2016/04/12/Java虚拟机运行时的内存区域/index.html">
 <meta property="og:site_name" content="RockLee's blog">
-<meta property="og:description">
+<meta property="og:description" content="知识需要总结，不能单纯的只看书，不能单纯的只记笔记，要想办法把书里的语言转换为自己的语言，然后表达出来。在这个过程中，会发现很多自己理解上的错误和欠缺：）
+一.Java概述　　Java是一种技术体系，具体来讲，我们将Java程序设计语言、Java虚拟机、Java API类库这三部分统称为JDK（Java Development Kit），因为JDK是用于支持Java程序开发的最小环境，所以有时候">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/18376935/14459629/9945c640-00eb-11e6-921a-9f62592b1bcc.png">
+<meta property="og:updated_time" content="2016-04-12T12:50:51.556Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RockLee's blog">
-<meta name="twitter:description">
+<meta name="twitter:title" content="Java虚拟机运行时的内存区域">
+<meta name="twitter:description" content="知识需要总结，不能单纯的只看书，不能单纯的只记笔记，要想办法把书里的语言转换为自己的语言，然后表达出来。在这个过程中，会发现很多自己理解上的错误和欠缺：）
+一.Java概述　　Java是一种技术体系，具体来讲，我们将Java程序设计语言、Java虚拟机、Java API类库这三部分统称为JDK（Java Development Kit），因为JDK是用于支持Java程序开发的最小环境，所以有时候">
+<meta name="twitter:image" content="https://cloud.githubusercontent.com/assets/18376935/14459629/9945c640-00eb-11e6-921a-9f62592b1bcc.png">
   
     <link rel="alternative" href="/atom.xml" title="RockLee&#39;s blog" type="application/atom+xml">
   
@@ -175,9 +181,7 @@
 	</div>
 </nav>
 
-      <div class="body-wrap">
-  
-    <article id="post-Java虚拟机运行时的内存区域" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Java虚拟机运行时的内存区域" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2016/04/12/Java虚拟机运行时的内存区域/" class="article-date">
@@ -193,12 +197,23 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/04/12/Java虚拟机运行时的内存区域/">Java虚拟机运行时的内存区域</a>
+    <h1 class="article-title" itemprop="name">
+      Java虚拟机运行时的内存区域
     </h1>
   
 
       </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/">JVM</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
       
     
     <div class="article-entry" itemprop="articleBody">
@@ -216,92 +231,67 @@
       
     </div>
     
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/">JVM</a></li></ul>
-	</div>
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/04/11/写在开端/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">写在开端</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
   
 </article>
 
 
-
-
-
-
-
-
-  
-    <article id="post-写在开端" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/04/11/写在开端/" class="article-date">
-  	<time datetime="2016-04-11T11:25:45.202Z" itemprop="datePublished">2016-04-11</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/04/11/写在开端/">写在开端</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <a id="more"></a>
-<p>最近的日子过的有些惨淡</p>
-<p>实习被阿里、腾讯鄙视，华为比赛被学弟学妹们吊打，感觉自己就像个sb一样=。=</p>
-<p>为了不再重蹈覆辙，我准备开个博客来记录下我学习之旅上的所思所想，所见所得</p>
-<p>在此我中二的宣布：<br>　<br>　　<strong>此博客将见证我这个安卓菜鸟的成神之路</strong></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/随笔/">随笔</a>
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
 	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
 
 
 
 
 
 
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="Java虚拟机运行时的内存区域" data-title="Java虚拟机运行时的内存区域" data-url="http://yoursite.com/2016/04/12/Java虚拟机运行时的内存区域/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"ldcrocklee"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
 
 
-  
-  
+
 </div>
       <footer id="footer">
   <div class="outer">
@@ -325,8 +315,8 @@
 		fancybox: true,
 		mathjax: true,
 		animate: true,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

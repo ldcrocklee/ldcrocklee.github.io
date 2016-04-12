@@ -6,20 +6,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <title>Java虚拟机运行时的内存区域 | RockLee&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="知识需要总结，不能单纯的只看书，不能单纯的只记笔记，要想办法把书里的语言转换为自己的语言，然后表达出来。在这个过程中，会发现很多自己理解上的错误和欠缺：）
-一.Java概述　　Java是一种技术体系，具体来讲，我们将Java程序设计语言、Java虚拟机、Java API类库这三部分统称为JDK（Java Development Kit），因为JDK是用于支持Java程序开发的最小环境，所以有时候">
+  <meta name="description" content="知识需要总结，不能单纯的只看书，不能单纯的只记笔记，要想办法把书里的语言转换为自己的语言，然后表达出来。在这个过程中，会发现很多自己理解上的错误和欠缺：）">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java虚拟机运行时的内存区域">
 <meta property="og:url" content="http://yoursite.com/2016/04/12/Java虚拟机运行时的内存区域/index.html">
 <meta property="og:site_name" content="RockLee's blog">
-<meta property="og:description" content="知识需要总结，不能单纯的只看书，不能单纯的只记笔记，要想办法把书里的语言转换为自己的语言，然后表达出来。在这个过程中，会发现很多自己理解上的错误和欠缺：）
-一.Java概述　　Java是一种技术体系，具体来讲，我们将Java程序设计语言、Java虚拟机、Java API类库这三部分统称为JDK（Java Development Kit），因为JDK是用于支持Java程序开发的最小环境，所以有时候">
+<meta property="og:description" content="知识需要总结，不能单纯的只看书，不能单纯的只记笔记，要想办法把书里的语言转换为自己的语言，然后表达出来。在这个过程中，会发现很多自己理解上的错误和欠缺：）">
 <meta property="og:image" content="https://cloud.githubusercontent.com/assets/18376935/14459629/9945c640-00eb-11e6-921a-9f62592b1bcc.png">
-<meta property="og:updated_time" content="2016-04-12T12:50:51.556Z">
+<meta property="og:updated_time" content="2016-04-12T13:16:21.366Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java虚拟机运行时的内存区域">
-<meta name="twitter:description" content="知识需要总结，不能单纯的只看书，不能单纯的只记笔记，要想办法把书里的语言转换为自己的语言，然后表达出来。在这个过程中，会发现很多自己理解上的错误和欠缺：）
-一.Java概述　　Java是一种技术体系，具体来讲，我们将Java程序设计语言、Java虚拟机、Java API类库这三部分统称为JDK（Java Development Kit），因为JDK是用于支持Java程序开发的最小环境，所以有时候">
+<meta name="twitter:description" content="知识需要总结，不能单纯的只看书，不能单纯的只记笔记，要想办法把书里的语言转换为自己的语言，然后表达出来。在这个过程中，会发现很多自己理解上的错误和欠缺：）">
 <meta name="twitter:image" content="https://cloud.githubusercontent.com/assets/18376935/14459629/9945c640-00eb-11e6-921a-9f62592b1bcc.png">
   
     <link rel="alternative" href="/atom.xml" title="RockLee&#39;s blog" type="application/atom+xml">
@@ -78,7 +75,7 @@
 						<li>Tags</li>
 						
 						
-						<li>Über</li>
+						<li>About</li>
 						
 					</ul>
 				</div>
@@ -218,8 +215,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <a id="more"></a>
-<p>知识需要总结，不能单纯的只看书，不能单纯的只记笔记，要想办法把书里的语言转换为自己的语言，然后表达出来。在这个过程中，会发现很多自己理解上的错误和欠缺：）</p>
+        <p>知识需要总结，不能单纯的只看书，不能单纯的只记笔记，要想办法把书里的语言转换为自己的语言，然后表达出来。在这个过程中，会发现很多自己理解上的错误和欠缺：）<br><a id="more"></a></p>
 <h1 id="一-Java概述"><a href="#一-Java概述" class="headerlink" title="一.Java概述"></a>一.Java概述</h1><p>　　Java是一种技术体系，具体来讲，我们将Java程序设计语言、Java虚拟机、Java API类库这三部分统称为JDK（Java Development Kit），因为JDK是用于支持Java程序开发的最小环境，所以有时候人们会用JDK来代替整个Java技术体系<br>　　而Java API类库中的Java SE API子集和Java虚拟机这两部分又被统称为JRE（Java Runtime Environment），JRE是支持Java运行的最小环境，注意JDK是包含JRE的关系</p>
 <h1 id="二-Java虚拟机运行时的内存区域"><a href="#二-Java虚拟机运行时的内存区域" class="headerlink" title="二.Java虚拟机运行时的内存区域"></a>二.Java虚拟机运行时的内存区域</h1><p><img src="https://cloud.githubusercontent.com/assets/18376935/14459629/9945c640-00eb-11e6-921a-9f62592b1bcc.png" alt="java"></p>
 <h2 id="1-程序计数器"><a href="#1-程序计数器" class="headerlink" title="1.程序计数器"></a>1.程序计数器</h2><p>　　程序计数器是一块较小的内存空间，可以看作是当前线程所执行的<strong>字节码</strong>的行号指示器。字节码解释器工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令。<br>　　说到这个<strong>字节码</strong>，我刚看书时对这个概念是一头雾水=。=，<br>　　在这里我需要解释一下字节码在Java中的含义：<br>　　Java 字节码（Java bytecode）是Java虚拟机执行的一种指令格式。举个栗子，C艹需要将你使用的程序语言翻译成汇编语言，然后通过汇编语言来跟真实机器进行沟通，那么对于Java来讲，Java将编程语言转换为字节码，然后由虚拟机来调用这些字节码完成对应的操作。一个字节是8比特，即字节码理论上有256种对应的操作码，但实际上操作码并没有这么多，在这里我只是简要的介绍一下字节码，以后的文章里面会详细说明<br>　　Java虚拟机的多线程是通过线程轮流切换并分配处理器执行时间的方式来实现的，在任何一个确定的时刻，一个处理器（对于多核处理器来说是一个内核）都只会执行一条线程中的指令。因此为了线程切换后能恢复到正确的执行位置，<strong>每条线程都需要有一个独立的程序计数器</strong>，各条线程的计数器互不影响，独立存储，我们称这类内存区域为“线程私有”的内存。</p>

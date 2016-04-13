@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Android中ViewPager加Fragment的用法 | RockLee&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这两天学习了一下Android中ViewPager + Fragment的用法，觉得这俩玩意儿结合起来的效果有点炫酷啊~~正好我也需要补充一下关于他们的基础知识，那么我就在这篇博客中讲一讲我的学习体会吧">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android中ViewPager加Fragment的用法">
+<meta property="og:url" content="http://yoursite.com/2016/04/13/Android中ViewPager加Fragment的用法/index.html">
+<meta property="og:site_name" content="RockLee's blog">
+<meta property="og:description" content="这两天学习了一下Android中ViewPager + Fragment的用法，觉得这俩玩意儿结合起来的效果有点炫酷啊~~正好我也需要补充一下关于他们的基础知识，那么我就在这篇博客中讲一讲我的学习体会吧">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/18376935/14487741/1044e342-0197-11e6-85d5-ae4412eb62ad.png">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/18376935/14487781/328bc1e6-0197-11e6-9fbb-0bc95064b735.png">
+<meta property="og:updated_time" content="2016-04-13T08:50:17.699Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android中ViewPager加Fragment的用法">
+<meta name="twitter:description" content="这两天学习了一下Android中ViewPager + Fragment的用法，觉得这俩玩意儿结合起来的效果有点炫酷啊~~正好我也需要补充一下关于他们的基础知识，那么我就在这篇博客中讲一讲我的学习体会吧">
+<meta name="twitter:image" content="https://cloud.githubusercontent.com/assets/18376935/14487741/1044e342-0197-11e6-85d5-ae4412eb62ad.png">
+  
+    <link rel="alternative" href="/atom.xml" title="RockLee&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/img/myhead.JPG" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">RockLee</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">read the fucking sourcecode</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						
+						<li>Über</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/ldcrocklee/" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="#" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">欢迎光临~</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">RockLee</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="/img/myhead.JPG" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">RockLee</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">read the fucking sourcecode</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/ldcrocklee/" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Android中ViewPager加Fragment的用法" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/13/Android中ViewPager加Fragment的用法/" class="article-date">
+  	<time datetime="2016-04-13T08:48:31.000Z" itemprop="datePublished">2016-04-13</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android中ViewPager加Fragment的用法
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这两天学习了一下Android中ViewPager + Fragment的用法，觉得这俩玩意儿结合起来的效果有点炫酷啊~~<br>正好我也需要补充一下关于他们的基础知识，那么我就在这篇博客中讲一讲我的学习体会吧<br><a id="more"></a></p>
+<h1 id="一-ViewPager介绍"><a href="#一-ViewPager介绍" class="headerlink" title="一.ViewPager介绍"></a>一.ViewPager介绍</h1><h2 id="1-ViewPager"><a href="#1-ViewPager" class="headerlink" title="1.ViewPager"></a>1.ViewPager</h2><p>我们来看一下ViewPager类在API中的介绍：<br>　　ViewPager是一个允许使用者通过页面数据来左右滑动页面的布局管理器。你可以通过一个适配器（PagerAdapter）来管理要显示的页面。<br>　　不过要注意的是，这个类目前还处于初期的设计和开发。随着今后兼容库的更新，API文档也会进行更改，同时应用程序在编译时也需要对代码进行一定的修改。<br>　　ViewPager更多的时候会与Fragment一起使用，这是一种很好的方法来管理各个页面的生命周期<br>　　（话说为什么要管理ViewPager的生命周期这是有说法滴~~因为当ViewPager与普通的Layout结合时，手机内存里会缓存所有的页面，当页面过多时就会耗尽内存，而结合使用Fragment中的适配器<strong>FragmentStatePagerAdapter</strong>则只会缓存当前的页面以及它的上一个和下一个页面）<br>　　Android提供了一些专门的适配器来让ViewPager与Fragment一起工作，也就是FragmentPagerAdapter与FragmentStatePagerAdapter。他们基本上可以满足大部分常见的需求，并且他们都有简单的代码样例来展示如何用他们来建立一个完整的用户页面。</p>
+<p>具体的使用可以去网上查代码有很多，我就不在这里说了。需要注意的一点是，在定义ViewPage的布局时，我们需要写出它的完整包名，否则会提示无法找到所属类，例如：<br><img src="https://cloud.githubusercontent.com/assets/18376935/14487741/1044e342-0197-11e6-85d5-ae4412eb62ad.png" alt="viewpage 1"></p>
+<h2 id="2-PagerAdapter"><a href="#2-PagerAdapter" class="headerlink" title="2.PagerAdapter"></a>2.PagerAdapter</h2><p>ViewPager使用PagerAdapter来管理数据，我们来看一下API中的介绍：<br>　　PagerAdapter是用于“将多个页面填充到ViewPager”的适配器的一个基类，大多数情况下，你们可能更倾向于使用一个实现了PagerAdapter并且更加具体的适配器，例如FragmentPagerAdapter或者FragmentStatePagerAdapter。<br>　　当你实现一个PagerAdapter时，你至少需要重写下面的几个方法：<br>　　　　instantiateItem(ViewGroup, int)<br>　　　　destroyItem(ViewGroup, int, Object)<br>　　　　getCount()<br>　　　　isViewFromObject(View, Object)<br>　　PagerAdapter比很多AdapterView的适配器更加通用。ViewPager使用回调机制来显示一个更新步骤，而不是直接使用视图回收机制。如果需要时，PagerAdapter也可以实现视图回收方法，或者直接使用一种更加巧妙的方法来管理页面，比如直接使用能够管理自身事务的Fragment。<br>　　ViewPager并不直接管理页面，而是通过一个key将每个页面联系起来。这个key用来跟踪和唯一标识一个给定的页面，且该key独立于adapter之外。PagerAdapter中的startUpdate(ViewGroup)方法一旦被执行，就说明ViewPager的内容即将开始改变。紧接着，instantiateItem(ViewGroup,int)和/或destroyItem(ViewGroup,int,Object)方法将会被执行一次或多次，然后finishUpdate(ViewGroup)的执行就意味着这一次刷新的完成。当finishUpdate(ViewGroup)方法执行完时，与instantiateItem(ViewGroup,int)方法返回的key相对应的视图将会被加入到父ViewGroup中，而与传递给destroyItem(ViewGroup,int,Object)方法的key相对应的视图将会被移除。isViewFromObject(View, Object)方法则判断一个视图是否与一个给定的key相对应。<br>　　一个简单的PagerAdapter会选择将视图本身作为key，在将视图创建并加入父ViewGroup之后通过instantiateItem(ViewGroup, int)返回。这种情况下，destroyItem(ViewGroup, int, Object) 的实现方法只需要将View从ViewGroup中移除即可，而isViewFromObject(View, Object)的实现方法可以直接写成return view == object;<br>　　PagerAdapter支持数据集的改变。数据集的改变必须放在主线程中，并且在结束时调用notifyDataSetChanged()方法，这与通过BaseAdapter适配的AdapterView类似。一个数据集的改变包含了页面的添加、移除或者位移。ViewPager可以通过在适配器中实现getItemPosition(Object)方法来保持当前页面处于运行状态。</p>
+<p>在这里我需要详细解释一下这四个方法的含义</p>
+<ul>
+<li><strong>instantiateItem(ViewGroup, int)</strong><br>　　该方法返回一个Object对象（代表新页面的key，不一定是一个View，可能是其他页面的容器），输入参数是<em>包含将被显示的页面的容器View</em>和<em>该页面被创建的位置</em>，方法含义是创建一个指定位置的页面，适配器在这里的作用是将View添加到由参数给出的容器中</li>
+<li><strong>destroyItem(ViewGroup, int, Object)</strong><br>　　该方法无返回值，含义是删除指定位置的页面。适配器在这里的作用是移除该View容器中的View</li>
+<li><strong>getCount()</strong><br>　　返回可用页面的数量</li>
+<li><strong>isViewFromObject(View, Object)</strong><br>　　判断页面（即输入的View）是否对应于某个key（即输入的Object），该key应当是instantiateItem返回的Object对象。该方法的恰当实现需要PagerAdapter适配器</li>
+</ul>
+<p>以下是一个简单的PagerAdapter代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyPagerAdapter</span> <span class="keyword">extends</span> <span class="title">PagerAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> List&lt;View&gt; pageList;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyPagerAdapter</span><span class="params">(List&lt;View&gt; pageList)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.pageList = pageList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 返回要展示的图片数量</span></span><br><span class="line">        <span class="keyword">return</span> pageList.size();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isViewFromObject</span><span class="params">(View arg0, Object arg1)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 假定instantiateItem返回的是一个View值，那么在这里直接用==判断一下就行</span></span><br><span class="line">        <span class="keyword">return</span> arg0 == arg1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">instantiateItem</span><span class="params">(ViewGroup container, <span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 获取指定位置的控件，页面的事件都可以在这里写</span></span><br><span class="line">        View view = pageList.get(position);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将指定位置的View加入到ViewGroup</span></span><br><span class="line">        container.addView(view);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将View作为key返回</span></span><br><span class="line">        <span class="keyword">return</span> view;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroyItem</span><span class="params">(ViewGroup container, <span class="keyword">int</span> position, Object object)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 将当前位置的View移除</span></span><br><span class="line">        container.removeView(pageList.get(position));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="二-Fragment介绍"><a href="#二-Fragment介绍" class="headerlink" title="二.Fragment介绍"></a>二.Fragment介绍</h1><h2 id="1-Fragment"><a href="#1-Fragment" class="headerlink" title="1.Fragment"></a>1.Fragment</h2><p>老样子，我们先来瞅瞅API中对于Fragment的介绍：<br>　　Fragment是一块可以放置在Activity中的该应用的用户界面或行为。我们可以通过FragmentManager与多个Fragment进行交互，而FragmentManager可以用Activity.getFragmentManager()和Fragment.getFragmentManager()来得到<br>　　Fragment类可以被用来实现各种各样的效果。作为Fragment的核心功能，它可以在一个庞大的Activity中运行一个特殊的操作或界面。一个Fragment必须紧紧的依附于它所存在的Activity中，而不能单独使用，虽然Fragment具有自己的生命周期，但是这个生命周期是取决于它所在的Activity的生命周期：如果Activity停止运行，那么Activity中的Fragment就不能被启动；如果Activity被销毁，那么Activity中的Fragment也会被销毁<br>接下来是API中关于Fragment生命周期的一段介绍：<br>　　虽然Fragment的生命周期与它所属的Activity紧紧相连，但是它还是具有标准的生命周期<br><img src="https://cloud.githubusercontent.com/assets/18376935/14487781/328bc1e6-0197-11e6-9fbb-0bc95064b735.png" alt="fragment"></p>
+<ul>
+<li>onAttach(Activity)：将Fragment与Activity绑定</li>
+<li>onCreate(Bundle)：Fragment进行初始化</li>
+<li>onCreateView(LayoutInflater, ViewGroup, Bundle)：创建并返回与该Fragment相联系的view</li>
+<li>onActivityCreated(Bundle)：告知Fragment它所属的Activity已经完成了Activity.onCreate()方法</li>
+<li>onViewStateRestored(Bundle)：告知Fragment它的所有View层次都已经被存储好（注意这个方法并没有在图中表示出来）</li>
+<li>onStart()：使得Fragment对用户可见（当然前提是它所属的Activity已经启动）</li>
+<li>onResume()：使得Fragment可以与用户进行交互（前提是它所属的Activity已经就绪）</li>
+<li>onPause()：Fragment不再与用户进行交互</li>
+<li>onStop()：Fragment不再对用户可见</li>
+<li>onDestroyView()：允许Fragment清除与其View相关联的数据</li>
+<li>onDestroy()：销毁Fragment的数据</li>
+<li>onDetach()：调用后立即解除与Activity的联系</li>
+</ul>
+<p>官方API中还有一部分关于FragmentLayout和栈的介绍，这里就先不翻译了，以后用到再说~~</p>
+<h2 id="2-FragmentPagerAdapter和FragmentStatePagerAdapter"><a href="#2-FragmentPagerAdapter和FragmentStatePagerAdapter" class="headerlink" title="2.FragmentPagerAdapter和FragmentStatePagerAdapter"></a>2.FragmentPagerAdapter和FragmentStatePagerAdapter</h2><p><strong>FragmentPagerAdapter</strong>是一个基于Fragment的适配器，它与ViewPage的结合会产生奇♂妙的反应。官方API的介绍（翻译的快跪了T T）：<br>　　FragmentPagerAdapter继承自PagerAdapter，主要用来展示多个Fragment页面，并且每一个Fragment都会被保存在fragmentmanager中。<br>　　FragmentPagerAdapter最适用于那种少量且相对静态的页面，例如几个tab页。<strong>每一个用户访问过的fragment都会被保存在内存中</strong>，尽管他的视图层级可能会在不可见时被销毁。因为fragment实例能够拥有任意数量的状态所以这可能导致产生大量的内存消耗。对于较多的页面集合，更推荐使用FragmentStatePagerAdapter。<br>　　注意：当使用FragmentPagerAdapter的时候对应的ViewPager必须拥有一个有效的ID集。<br>　　　　　FragmentPagerAdapter的派生类只需要实现getItem(int)和getCount()即可。</p>
+<p><strong>FragmentStatePagerAdapter</strong>同样也是一个适配器，下面是它的官方介绍：<br>　　FragmentStatePagerAdapter继承自PagerAdapter，主要使用Fragment来管理每个页面。这个类同样用来保存和恢复fragment页面的状态。<br>　　FragmentStatePagerAdapter更多用于大量页面，例如视图列表。<strong>当某个页面对用户不再可见时，他们的整个fragment就会被销毁，仅保留fragment状态</strong>。相比于FragmentPagerAdapter，这样做的好处是在访问各个页面时能节约大量的内存开销，但代价是在页面切换时会增加非常多的开销。<br>　　注意：当使用FragmentStatePagerAdapter的时候对应的ViewPager必须拥有一个有效的ID集。<br>　　　　　FragmentStatePagerAdapter的派生类只需要实现getItem(int)和getCount()即可。<br>以下是一个简单的FragmentPagerAdapter适配器的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyFragmentAdapter</span> <span class="keyword">extends</span> <span class="title">FragmentPagerAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> List&lt;Fragment&gt; fragmentList;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyFragmentAdapter</span><span class="params">(FragmentManager fm, List&lt;Fragment&gt; fragmentList)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(fm);</span><br><span class="line">        <span class="keyword">this</span>.fragmentList = fragmentList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Fragment <span class="title">getItem</span><span class="params">(<span class="keyword">int</span> arg0)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//返回指定位置的Fragment</span></span><br><span class="line">        <span class="keyword">return</span> fragmentList.get(arg0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//返回要使用的fragment的总数量</span></span><br><span class="line">        <span class="keyword">return</span> fragmentList.size();</span><br><span class="line">    &#125;</span><br><span class="line">｝</span><br></pre></td></tr></table></figure></p>
+<h1 id="三-Fragment与ViewPage的结合"><a href="#三-Fragment与ViewPage的结合" class="headerlink" title="三.Fragment与ViewPage的结合"></a>三.Fragment与ViewPage的结合</h1><p>这里需要注意一点，如果要使用FragmentPagerAdapter的话，我们的MainActivity必须继承FragmentActivity而不是Activity~~<br>（具体的实现例子我过几天会传到github上，先挖个坑）</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/04/12/Java虚拟机运行时的内存区域/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Java虚拟机运行时的内存区域</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="Android中ViewPager加Fragment的用法" data-title="Android中ViewPager加Fragment的用法" data-url="http://yoursite.com/2016/04/13/Android中ViewPager加Fragment的用法/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"ldcrocklee"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 RockLee
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

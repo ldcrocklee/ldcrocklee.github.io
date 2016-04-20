@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>关于背包问题的思考 | RockLee&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近一直在学习算法，因为我发现我的算法太弱，华为的机试题我连个中级题都做不出来！这两天主要复习了一下排序算法，还有学习了0-1背包问题的解法。关于排序算法的总结我会在以后的博客里写出来，这篇博客主要讲一下0-1背包问题的学习心得，在此要特别感谢崔添翼大神的《背包问题九讲》">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于背包问题的思考">
+<meta property="og:url" content="http://yoursite.com/2016/04/20/关于背包问题的思考/index.html">
+<meta property="og:site_name" content="RockLee's blog">
+<meta property="og:description" content="最近一直在学习算法，因为我发现我的算法太弱，华为的机试题我连个中级题都做不出来！这两天主要复习了一下排序算法，还有学习了0-1背包问题的解法。关于排序算法的总结我会在以后的博客里写出来，这篇博客主要讲一下0-1背包问题的学习心得，在此要特别感谢崔添翼大神的《背包问题九讲》">
+<meta property="og:updated_time" content="2016-04-20T13:58:46.357Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于背包问题的思考">
+<meta name="twitter:description" content="最近一直在学习算法，因为我发现我的算法太弱，华为的机试题我连个中级题都做不出来！这两天主要复习了一下排序算法，还有学习了0-1背包问题的解法。关于排序算法的总结我会在以后的博客里写出来，这篇博客主要讲一下0-1背包问题的学习心得，在此要特别感谢崔添翼大神的《背包问题九讲》">
+  
+    <link rel="alternative" href="/atom.xml" title="RockLee&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/img/myhead.JPG" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">RockLee</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">read the fucking sourcecode</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						
+						<li>About</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/ldcrocklee/" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="#" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">欢迎光临~</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">RockLee</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="/img/myhead.JPG" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">RockLee</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">read the fucking sourcecode</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/ldcrocklee/" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-关于背包问题的思考" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/20/关于背包问题的思考/" class="article-date">
+  	<time datetime="2016-04-20T13:57:41.000Z" itemprop="datePublished">2016-04-20</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      关于背包问题的思考
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>　　最近一直在学习算法，因为我发现我的算法太弱，华为的机试题我连个中级题都做不出来！这两天主要复习了一下排序算法，还有学习了0-1背包问题的解法。关于排序算法的总结我会在以后的博客里写出来，这篇博客主要讲一下0-1背包问题的学习心得，在此要特别感谢崔添翼大神的《背包问题九讲》<br>　<br><a id="more"></a></p>
+<h1 id="一-背包问题的由来"><a href="#一-背包问题的由来" class="headerlink" title="一.背包问题的由来"></a>一.背包问题的由来</h1><p>　　背包问题(Knapsack problem)是一种组合优化的NP完全问题。问题可以描述为：给定一组物品，每种物品都有自己的重量和价格，在限定的总重量内，我们如何选择，才能使得物品的总价格最高。问题的名称来源于如何选择最合适的物品放置于给定背包中。相似问题经常出现在商业、组合数学，计算复杂性理论、密码学和应用数学等领域中。也可以将背包问题描述为决定性问题，即在总重量不超过W的前提下，总价值是否能达到V？它是在1978年由Merkel和Hellman提出的。（百度抄的，让这篇文章显得专业点=。=）</p>
+<h1 id="二-关于具体问题的分析"><a href="#二-关于具体问题的分析" class="headerlink" title="二.关于具体问题的分析"></a>二.关于具体问题的分析</h1><p>　　讲故事的时间到！<br>　　<br>　　话说从前有个小萝莉，她去林子里采蘑菇，现在摆在她面前的蘑菇一共有N个，编号为0，1，…，N-1。小萝莉当然想把所有的蘑菇都带回家，但是她的篮子没有那么大，容量只有C。假设每个蘑菇都有它的价值（松露呵呵一笑说：我不是针对你，我是说在座的蘑菇都是垃圾）和体积，我们分别记为W[i]和V[i]。那么问题来了，作为一个专业的萝莉控，我们如何让小萝莉能够在有限的篮子容量下装到价值最高的蘑菇呢？<br>　　<br>　　我们想要将上面的蘑菇装入到篮子里，可以明显的发现最优解为装入0号和3号蘑菇，那么我们在程序上该怎么去寻找这个最优解呢？动态规划中有一个状态转移方程可以解决我们的问题：</p>
+<pre><code>d(i, j)=\max\ (d(i-1, j),　d(i-1,j-V[i-1]) + W[i-1])
+</code></pre><p>　　<br>　　上面这个公式中的d(i,j)表示<strong>前i个</strong>蘑菇装到<strong>剩余容量</strong>为j的篮子里能达到的最大价值。假设我们已知d(i-1,j)（即前i-1个蘑菇装到剩余容量为j的篮子里能达到的最大价值），那么再装第i-1个蘑菇时（注意蘑菇编号从零开始），价值上会产生两种可能：<br>　　<br>　　1.第i-1个蘑菇不装进去（不存在装不进去的可能，除非该蘑菇体积大于篮子剩余容量），那么d(i,j)的值对应为d(i-1,j)<br>　　<br>　　2.第i-1个蘑菇装进去，那么$d(i,j)$的值对应为d(i-1,j-V[i-1])+W[i-1]，即如果你要装第i-1个蘑菇，那么你首先要给它腾地方，那么篮子的剩余容量为j-V[i-1]，价值增加W[i-1]<br>　　<br>　　我初次看到这个公式时有个疑问：<br>　　<br>　　<strong>每次在加入新蘑菇时只考虑两种情况，这件事情的前提是前面加进去的所有蘑菇已经计算出来了它们的最优解，那么会不会在加入新蘑菇时破坏掉前面所计算的最优解呢？</strong><br>　　<br>　　我们把上面的问题具体化一下，看下表：</p>
+<table>
+<thead>
+<tr>
+<th>蘑菇编号</th>
+<th style="text-align:right">价值</th>
+<th style="text-align:center">体积</th>
+<th>篮子容量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td style="text-align:right">20</td>
+<td style="text-align:center">5</td>
+<td>11</td>
+</tr>
+<tr>
+<td>1</td>
+<td style="text-align:right">10</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td>2</td>
+<td style="text-align:right">12</td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td>3</td>
+<td style="text-align:right">30</td>
+<td style="text-align:center">5</td>
+</tr>
+</tbody>
+</table>
+<p>　　将这些值带入到上述的状态转移公式中，可以得到下面这张表：</p>
+<table>
+<thead>
+<tr>
+<th>$d(i,j)$</th>
+<th>对应的的最大价值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$d(0,0)$ ~ $d(0,11)$</td>
+<td>0</td>
+</tr>
+<tr>
+<td>$d(1,0)$ ~ $d(1,4)$</td>
+<td>0</td>
+</tr>
+<tr>
+<td>$d(1,5)$ ~ $d(1,11)$</td>
+<td>20</td>
+</tr>
+<tr>
+<td>$d(2,0)$ ~ $d(2,3)$</td>
+<td>0</td>
+</tr>
+<tr>
+<td>$d(2,4)$</td>
+<td>10</td>
+</tr>
+<tr>
+<td>$d(2,5)$ ~ $d(2,8)$</td>
+<td>20</td>
+</tr>
+<tr>
+<td>$d(2,9)$ ~ $d(2,11)$</td>
+<td>30</td>
+</tr>
+<tr>
+<td>$d(3,1)$ ~ $d(3,2)$</td>
+<td>0</td>
+</tr>
+<tr>
+<td>$d(3,3)$ ~ $d(3,4)$</td>
+<td>12</td>
+</tr>
+<tr>
+<td>$d(3,5)$ ~ $d(3,6)$</td>
+<td>20</td>
+</tr>
+<tr>
+<td>$d(3,7)$</td>
+<td>22</td>
+</tr>
+<tr>
+<td>$d(3,8)$ ~ $d(3,11)$</td>
+<td>32</td>
+</tr>
+<tr>
+<td>$d(4,0)$ ~ $d(4,2)$</td>
+<td>0</td>
+</tr>
+<tr>
+<td>$d(4,3)$</td>
+<td>12</td>
+</tr>
+<tr>
+<td>$d(4,4)$</td>
+<td>12</td>
+</tr>
+<tr>
+<td>$d(4,5)$</td>
+<td>30</td>
+</tr>
+<tr>
+<td>$d(4,6)$</td>
+<td>30</td>
+</tr>
+<tr>
+<td>$d(4,7)$</td>
+<td>30</td>
+</tr>
+<tr>
+<td>$d(4,8)$</td>
+<td>42</td>
+</tr>
+<tr>
+<td>$d(4,9)$</td>
+<td>42</td>
+</tr>
+<tr>
+<td>$d(4,10)$</td>
+<td>50</td>
+</tr>
+<tr>
+<td>$d(4,11)$</td>
+<td>50</td>
+</tr>
+</tbody>
+</table>
+<p>　　针对我的疑问，我们来看一下$d(4,9)$这个值。$d(4,9)$表示前四个蘑菇装入剩余容量为9的篮子里最大值为42，即装入了2号和3号蘑菇;又知道</p>
+<p>　　$d(4, 9)=\max\ (d(3,9),　d(3,4) + 30)$</p>
+<p>　　而$d(2,10)$为30，即装入的是0号和2号蘑菇。也就是说在装3号蘑菇的时候，我们的算法很聪明的就将剩余容量为9的最优解从0号2号变为了2号3号，这是怎么办到的呢？$d(4,9)$在计算的时候考虑两种可能，第二种可能会将篮子腾出地方来放新的蘑菇，我们已经知道了$d(3,4)$是一个三个蘑菇的全局最优解（因为它不管多大最终总会递推到只有一个物品的时候），那么新的蘑菇的加入或者不加只会导致最优解发生两种变化，那么我们只要将两种可能比较一下即可知道新的最优解。<br>　　<br>　　接下来的问题是我们现在只知道了最大价值的最优解，但是却不知道到底哪几个蘑菇的组合才是最优解。仔细观察该状态转移方程我们发现只有当结果中新加入蘑菇的时候$d(i,j)$才会大于$d(i-1,j)$，那么当这个结果发生时，我们做个数组x来存储一下当前的i即可，具体代码实现:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;				</span><br><span class="line">		Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">		<span class="keyword">int</span> Num = sc.nextInt();<span class="comment">//物品的个数（编号从0开始），不超过100</span></span><br><span class="line">		<span class="keyword">int</span> Col = sc.nextInt();<span class="comment">//背包容量，不超过1000</span></span><br><span class="line">		<span class="keyword">int</span>[][] d = <span class="keyword">new</span> <span class="keyword">int</span>[Num+<span class="number">1</span>][Col+<span class="number">1</span>];<span class="comment">//表示前i个物品装到剩余容量为j的背包中的最大重量,当然不包括编号为i的物品</span></span><br><span class="line">		<span class="keyword">int</span>[] Ver = <span class="keyword">new</span> <span class="keyword">int</span>[Num];<span class="comment">//物品对应的体积</span></span><br><span class="line">		<span class="keyword">int</span>[] Weight = <span class="keyword">new</span> <span class="keyword">int</span>[Num];<span class="comment">//物品对应的价值</span></span><br><span class="line">		</span><br><span class="line">		<span class="keyword">while</span>(sc.hasNext())&#123;</span><br><span class="line">			<span class="comment">//初始化物品数据</span></span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;Num; i++)&#123;				</span><br><span class="line">				Ver[i] = sc.nextInt();</span><br><span class="line">				Weight[i] = sc.nextInt();</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			<span class="comment">/*</span><br><span class="line">			 * 该嵌套循环表达的意思是，基于不同的物品个数，背包剩余容量的可能值分别对应的最大价值</span><br><span class="line">			 */</span></span><br><span class="line">			</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;=Num; i++)&#123;</span><br><span class="line">			    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>; j&lt;=Col; j++)&#123;</span><br><span class="line">			    	d[i][j] = (i==<span class="number">0</span>) ? <span class="number">0</span> : d[i-<span class="number">1</span>][j];</span><br><span class="line">			        </span><br><span class="line">			        <span class="comment">/*</span><br><span class="line">			         * 注意，j代表的含义是剩余容量！如果剩余容量大于物品i-1的体积，</span><br><span class="line">			         */</span></span><br><span class="line">			    	</span><br><span class="line">			    	<span class="keyword">if</span>(i&gt;<span class="number">0</span> &amp;&amp; j&gt;=Ver[i-<span class="number">1</span>])  </span><br><span class="line">			        	d[i][j] = (d[i-<span class="number">1</span>][j] &gt; d[i-<span class="number">1</span>][j-Ver[i-<span class="number">1</span>]]+Weight[i-<span class="number">1</span>]) ? </span><br><span class="line">			                d[i-<span class="number">1</span>][j] : d[i-<span class="number">1</span>][j-Ver[i-<span class="number">1</span>]]+Weight[i-<span class="number">1</span>];</span><br><span class="line">			    &#125;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			System.out.println(d[Num][Col]);</span><br><span class="line">			</span><br><span class="line">			<span class="comment">/*</span><br><span class="line">			 * 存储最优解中的物品编号</span><br><span class="line">			 */</span></span><br><span class="line">			<span class="keyword">int</span> j = Col;</span><br><span class="line">			<span class="keyword">int</span>[] x = <span class="keyword">new</span> <span class="keyword">int</span>[Num];<span class="comment">//存储物品编号</span></span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=Num; i&gt;<span class="number">0</span>; i--)&#123;</span><br><span class="line">				<span class="keyword">if</span>(d[i][j] &gt; d[i-<span class="number">1</span>][j])&#123;</span><br><span class="line">					x[i-<span class="number">1</span>] = <span class="number">1</span>;<span class="comment">//i-1就是该物品的编号</span></span><br><span class="line">					j = j - Ver[i-<span class="number">1</span>];</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; x.length; i++) &#123;</span><br><span class="line">				<span class="keyword">if</span>(x[i] == <span class="number">1</span>)</span><br><span class="line">					System.out.print(i);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>　　</p>
+<h1 id="三-背包问题的代码结构优化"><a href="#三-背包问题的代码结构优化" class="headerlink" title="三.背包问题的代码结构优化"></a>三.背包问题的代码结构优化</h1><p>　　首先，物品的体积和价值我们不需要用数组来存储了，可以边读取边处理数据<br>　　<br>　　其次，我们观察一下状态转移方程：<br>　　<br>　　$d(i, j)=\max\ (d(i-1, j),　d(i-1,j-V) + W)$<br>　　<br>　　我们发现$d(i, j)$的计算只依赖于i-1和j这两个变量（注意V和W是优化后不断进行读取的变量），那么也就是说d[i] [j]这个二维数组我们可以简化为一个一维数组d[0] ~ d[C]来存储i-1和j对应的d值，然后不断的用较大的值去更新d[j]即可。所以状态方程变为：<br>　　<br>　　$d(i, j)=\max\ (d(j),　d(j-V) + W)$<br>　　<br>　　但是这样子的变化会有缺陷！比如说计算完$d(i,j)$的值后我们的优化算法会更新掉原来的$d(i-1,j)$的值，将它变为$d(i,j)$。然后按照我们上面的代码，j会自加继续循环，那么下一个循环我们会计算$d(i, j+1)$的值，我们知道计算$d(i,j+1)$的值需要知道$d(i-1,j+1)$和$d(i-1,j+1-V)$的值，那么假设$d(i-1,j+1-V)$中的$j+1-V$计算下来发现刚好等于j(V是1)，即我们需要知道$d(i-1,j)$！但是这个值已经被上一步操作更新了，我们无法知道它到底是什么。那么该怎么办呢？其实只需要将j的循环顺序改造一下，自增改为自减即可，因为V不可能是负数，所以不会出现重复的情况。优化代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;				</span><br><span class="line">		Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">		<span class="keyword">int</span> Num = sc.nextInt();<span class="comment">//物品的个数（编号从0开始），不超过100</span></span><br><span class="line">		<span class="keyword">int</span> Col = sc.nextInt();<span class="comment">//背包容量，不超过1000</span></span><br><span class="line">		<span class="keyword">int</span>[] d = <span class="keyword">new</span> <span class="keyword">int</span>[Col+<span class="number">1</span>];<span class="comment">//表示前i个（会不断更新）物品装到剩余容量为j的背包中的最大重量,当然不包括编号为i的物品		</span></span><br><span class="line">		<span class="keyword">int</span> Ver = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">int</span> Weight = <span class="number">0</span>;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">while</span>(sc.hasNext())&#123;</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;=Num; i++)&#123;</span><br><span class="line">				<span class="comment">//不需要用数组存储体积和价值了，边读入边处理数据即可</span></span><br><span class="line">				<span class="keyword">if</span>(i &gt;<span class="number">0</span>)&#123;</span><br><span class="line">					Ver = sc.nextInt();</span><br><span class="line">					Weight = sc.nextInt();</span><br><span class="line">				&#125;</span><br><span class="line">				</span><br><span class="line">				<span class="keyword">for</span>(<span class="keyword">int</span> j=Col; j&gt;=<span class="number">0</span>; j--)&#123;		    	</span><br><span class="line">			   			        </span><br><span class="line">			    	<span class="keyword">if</span>(i&gt;<span class="number">0</span> &amp;&amp; j&gt;=Ver)  </span><br><span class="line">			        	d[j] = (d[j] &gt; d[j-Ver]+Weight) ? d[j] : d[j-Ver]+Weight;</span><br><span class="line">			    &#125;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			System.out.println(d[Col]);			</span><br><span class="line">								</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>最后在说一句，这种优化后的结构无法打印出到底有那些物品构成了最优解</strong></p>
+<h1 id="四-背包问题的一个进阶"><a href="#四-背包问题的一个进阶" class="headerlink" title="四.背包问题的一个进阶"></a>四.背包问题的一个进阶</h1><p>最近做了一道有依赖的背包问题，具体问题如下：</p>
+<p><strong>题目描述</strong><br>　　王强今天很开心，公司发给N元的年终奖。王强决定把年终奖用于购物，他把想买的物品分为两类：主件与附件，附件是从属于某个主件的，下表就是一些主件与附件的例子：<br>　　主件    附件<br>　　电脑    打印机，扫描仪<br>　　书柜    图书<br>　　书桌    台灯，文具<br>　　工作椅    无<br>　　<br>　　如果要买归类为附件的物品，必须先买该附件所属的主件。每个主件可以有 0 个、 1 个或 2 个附件。附件不再有从属于自己的附件。王强想买的东西很多，为了不超出预算，他把每件物品规定了一个重要度，分为 5 等：用整数 1 ~ 5 表示，第 5 等最重要。他还从因特网上查到了每件物品的价格（都是 10 元的整数倍）。他希望在不超过N元（可以等于N元）的前提下，使每件物品的价格与重要度的乘积的总和最大。<br>    设第 j 件物品的价格为 v[j] ，重要度为 w[j] ，共选中了 k 件物品，编号依次为 j 1 ， j 2 ，……， j k ，则所求的总和为：v[j 1 ]<em>w[j 1 ]+v[j 2 ]</em>w[j 2 ]+ … +v[j k ]<em>w[j k ] 。（其中 </em> 为乘号）<br>    请你帮助王强设计一个满足要求的购物单。</p>
+<p><strong>输入描述</strong><br>　　输入的第 1 行，为两个正整数，用一个空格隔开：N m（其中 N （ &lt;32000 ）表示总钱数， m （ &lt;60 ）为希望购买物品的个数。）</p>
+<p>　　从第 2 行到第 m+1 行，第 j 行给出了编号为 j-1 的物品的基本数据，每行有 3 个非负整数 v p q<br>（其中 v 表示该物品的价格（ v<10000 1="" 5="" ），="" p="" 表示该物品的重要度（="" ~="" q="" 表示该物品是主件还是附件。如果="" ，表示该物品为主件，如果="">0 ，表示该物品为附件， q 是所属主件的编号）</10000></p>
+<p><strong>输出描述</strong><br>　　输出文件只有一个正整数，为不超过总钱数的物品的价格与重要度乘积的总和的最大值（&lt;　200000）。</p>
+<p>输入例子:<br>1000 5<br>800 2 0<br>400 5 1<br>300 5 1<br>400 3 0<br>500 2 0</p>
+<p>输出例子:<br>2200</p>
+<p>我做了一个Java语言的实现，具体代码如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> MaxN= <span class="number">60</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> MaxM= <span class="number">32000</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">max</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">		<span class="keyword">int</span> result;</span><br><span class="line">		result = a&gt;b ? a : b;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;				</span><br><span class="line">		Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">		<span class="comment">//注意物品编号从1开始</span></span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span> N = sc.nextInt()/<span class="number">10</span>;<span class="comment">//总钱数&lt;32000,除10优化</span></span><br><span class="line">		<span class="keyword">int</span> m = sc.nextInt();<span class="comment">//期望购买的物品个数&lt;60</span></span><br><span class="line">		</span><br><span class="line">		<span class="keyword">int</span>[] V = <span class="keyword">new</span> <span class="keyword">int</span>[MaxN];<span class="comment">//物品的价格</span></span><br><span class="line">		<span class="keyword">int</span>[] P = <span class="keyword">new</span> <span class="keyword">int</span>[MaxN];<span class="comment">//物品的重要度</span></span><br><span class="line">		<span class="keyword">int</span>[] Q = <span class="keyword">new</span> <span class="keyword">int</span>[MaxN];<span class="comment">//物品是否是附件，若是则其对应的主件为多少</span></span><br><span class="line">		<span class="keyword">int</span>[] W = <span class="keyword">new</span> <span class="keyword">int</span>[MaxN];<span class="comment">//物品的最终价值，即V*P</span></span><br><span class="line">		<span class="keyword">int</span>[][] f = <span class="keyword">new</span> <span class="keyword">int</span>[MaxN+<span class="number">1</span>][MaxM/<span class="number">10</span>];<span class="comment">//物品组，即主件i在不同费用情况下对应的附件最大价值</span></span><br><span class="line">		<span class="keyword">int</span>[] F = <span class="keyword">new</span> <span class="keyword">int</span>[MaxM/<span class="number">10</span>];<span class="comment">//前i个物品装进剩余容量为j的背包中的最大价值，注意这里物品编号从1开始</span></span><br><span class="line">		<span class="keyword">int</span>[][] s = <span class="keyword">new</span> <span class="keyword">int</span>[MaxN][MaxN];<span class="comment">//s[i][j]表示主件i的第j个附件的编号  </span></span><br><span class="line">		<span class="keyword">int</span>[] s_ind = <span class="keyword">new</span> <span class="keyword">int</span>[MaxN];<span class="comment">//s_ind[i]表示主件i的附件数量  </span></span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">while</span>(sc.hasNext())&#123;</span><br><span class="line">						</span><br><span class="line">			<span class="comment">//初始化数据</span></span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= m; i++) &#123;</span><br><span class="line">				V[i] = sc.nextInt()/<span class="number">10</span>;<span class="comment">//价格为10的倍数，优化</span></span><br><span class="line">				P[i] = sc.nextInt();</span><br><span class="line">				Q[i] = sc.nextInt();</span><br><span class="line">				W[i] = V[i]*P[i];</span><br><span class="line">				</span><br><span class="line">				<span class="keyword">if</span>(Q[i]&gt;<span class="number">0</span>)&#123;<span class="comment">//即编号为i的物品为附件</span></span><br><span class="line">				    s[Q[i]][s_ind[Q[i]]]=i;<span class="comment">//该附件所属的主件Q[i]的附件值置为i，随着s_ind[Q[i]]的增加，二维数组的第二维坐标也在变动</span></span><br><span class="line">				    s_ind[Q[i]]++;<span class="comment">//该主件Q[i]的附件数量加一</span></span><br><span class="line">				&#125;			</span><br><span class="line">		    &#125;</span><br><span class="line">			</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=m;i++)&#123;  </span><br><span class="line">		        <span class="comment">//如果物品i是附件，跳过这次循环</span></span><br><span class="line">				<span class="keyword">if</span>(Q[i] &gt; <span class="number">0</span>)  </span><br><span class="line">		        	<span class="keyword">continue</span>;  </span><br><span class="line">		        <span class="comment">//i是主件,对每个主件的附件组进行一次01背包				 </span></span><br><span class="line">				<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;s_ind[i];j++)&#123;  </span><br><span class="line">					<span class="keyword">int</span> temp=s[i][j];<span class="comment">//i的某个附件的编号</span></span><br><span class="line">					</span><br><span class="line">					<span class="keyword">for</span>(<span class="keyword">int</span> k=N-V[i];k&gt;=V[temp];k--)<span class="comment">//k的变动范围是该附件的价格到最大费用减主件价格</span></span><br><span class="line">						f[i][k]=max(f[i][k],f[i][k-V[temp]]+W[temp]);  </span><br><span class="line">		        &#125;  		</span><br><span class="line">	        </span><br><span class="line">				<span class="comment">//对所有主件以及其附件的物品组做一次背包,j相当于背包剩余容量，k相当于不断往背包里面加的物品组</span></span><br><span class="line">				<span class="keyword">for</span>(<span class="keyword">int</span> j=N;j&gt;=V[i];j--)&#123;  </span><br><span class="line">					<span class="keyword">for</span>(<span class="keyword">int</span> k=j;k&gt;=V[i];k--)&#123;  </span><br><span class="line">					    F[j]=max(F[j],F[j-k]+W[i]+f[i][k-V[i]]);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;				</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">			System.out.print(F[N]*<span class="number">10</span>);			</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/04/13/Android中ViewPager加Fragment的用法/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Android中ViewPager加Fragment的用法</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="关于背包问题的思考" data-title="关于背包问题的思考" data-url="http://yoursite.com/2016/04/20/关于背包问题的思考/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"ldcrocklee"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 RockLee
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

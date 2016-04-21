@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>关于JVM的GC机制学习总结 | RockLee&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这篇文章我们来谈谈GC的相关概念，其中大部分内容是出自《深入理解Java虚拟机》这本书，算是一篇学习笔记吧~~">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于JVM的GC机制学习总结">
+<meta property="og:url" content="http://yoursite.com/2016/04/21/关于JVM的GC机制学习总结/index.html">
+<meta property="og:site_name" content="RockLee's blog">
+<meta property="og:description" content="这篇文章我们来谈谈GC的相关概念，其中大部分内容是出自《深入理解Java虚拟机》这本书，算是一篇学习笔记吧~~">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/18376935/14702101/3cff4a9a-07db-11e6-90ff-0a284fa27e8c.png">
+<meta property="og:updated_time" content="2016-04-21T08:11:06.894Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于JVM的GC机制学习总结">
+<meta name="twitter:description" content="这篇文章我们来谈谈GC的相关概念，其中大部分内容是出自《深入理解Java虚拟机》这本书，算是一篇学习笔记吧~~">
+<meta name="twitter:image" content="https://cloud.githubusercontent.com/assets/18376935/14702101/3cff4a9a-07db-11e6-90ff-0a284fa27e8c.png">
+  
+    <link rel="alternative" href="/atom.xml" title="RockLee&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/img/myhead.JPG" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">RockLee</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">read the fucking sourcecode</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						
+						<li>Über</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/ldcrocklee/" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="#" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/JVM/" style="font-size: 20px;">JVM</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">欢迎光临~</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">RockLee</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="/img/myhead.JPG" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">RockLee</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">read the fucking sourcecode</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/ldcrocklee/" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-关于JVM的GC机制学习总结" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/21/关于JVM的GC机制学习总结/" class="article-date">
+  	<time datetime="2016-04-21T08:11:01.000Z" itemprop="datePublished">2016-04-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      关于JVM的GC机制学习总结
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/">JVM</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这篇文章我们来谈谈GC的相关概念，其中大部分内容是出自《深入理解Java虚拟机》这本书，算是一篇学习笔记吧~~<br><a id="more"></a></p>
+<p>GC就是垃圾回收的意思，Java利用这个自动化机制去管理各种内存泄漏和内存溢出问题，同时也是Java与C艹之间的一个重要区别。那么，GC需要完成哪些事情呢？基本上就3点：<br>　　1.哪些内存需要回收？<br>　　2.什么时候进行回收操作？<br>　　3.GC如何去进行回收？</p>
+<h1 id="一-如何判断对象已死"><a href="#一-如何判断对象已死" class="headerlink" title="一.如何判断对象已死"></a>一.如何判断对象已死</h1><p>　　你问我哪些内存需要回收？当然是已经“死亡”的对象了！（死亡的对象是指不可能再被任何途径使用的对象）</p>
+<h2 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h2><p>　　给对象中添加一个引用计数器，每当有一个地方引用它时计数器值加1，引用失效时计数器值减一，当计数器值为0时代表该对象可以被回收了<br>　　优点：实现简单、效率高<br>　　缺点：无法解决对象之间循环引用的问题</p>
+<h2 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h2><p>　　Java的主流实现中都是通过可达性分析来判断对象是否存活的：<br>　　<br>　　<strong>通过一系列的称为”GC Roots”的对象作为起始点，当一个对象到GC　Roots没有任何引用链相连（对象不可达）时，则证明此对象是不可用的，即可以被回收</strong></p>
+<p>　　可以作为GC Roots的对象有以下几种：<br>　　1.虚拟机栈（栈帧中的本地变量表）中引用的对象<br>　　2.方法区中类静态属性引用的对象<br>　　3.方法区中常量引用的对象<br>　　4.本地方法栈中Native方法引用的对象</p>
+<p>　　我在看书看到这里时有点疑问，到底这四类对象为什么会被选取为GC Roots呢？我上网找了找资料，根据我的理解我认为，因为这几类对象都是正在活动的对象（执行上下文中）或者十分重要的对象（比如static和final对象等全局性的引用）</p>
+<p>　　我们在考虑这两个算法时，定义的所谓“引用”与否不能太过狭隘，即非生即死。在Java中我们将引用的强度分为四种：</p>
+<h2 id="Java中的引用分为四种：强、软、弱、虚"><a href="#Java中的引用分为四种：强、软、弱、虚" class="headerlink" title="Java中的引用分为四种：强、软、弱、虚"></a>Java中的引用分为四种：强、软、弱、虚</h2><p>　　这四种引用强度逐次降低<br>　　<br>　　<strong>1.强引用（Strong Reference）</strong><br>    指代码中普遍存在的引用，比如Object obj = new Object()这类引用，只要强引用还存在，GC就永远不会回收掉被引用的对象<br>　　<br>　　<strong>2.软引用（Soft Reference）</strong><br>    描述一些还有用但是并非必需的对象，对于此类对象，在系统中将要发生内存溢出异常之前，会把这类对象列为回收范围之中进行第二次回收，如果这次回收还没有足够的内存，才会抛出异常。使用SoftReference类来实现<br>　　<br>　　<strong>3.弱引用（Weak Reference）</strong><br>    也是用来描述非必需的对象，强度更弱，该类引用关联的对象只能生存到下一次垃圾收集发生之前，即当垃圾收集器工作时，无论当前内存是否足够，都会回收掉只被弱引用关联的对象。使用WeakReference类来实现<br>　　<br>　　<strong>4.虚引用（Phantom Reference）</strong><br>    它是最弱的一种引用关系，一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来取得一个对象实例。为一个对象设置虚引用的唯一目的是能在这个对象被收集器回收时收到一个系统通知。使用PhantomReference类来实现</p>
+<p>　　把引用分类成这四种情形有什么用呢？我们举个栗子，比如说在缓存图片的时候我们希望能够在内存能够承受的范围内尽量多的缓存图片，那么我们将图片对象设置为软引用，那么这些缓存图片只在内存即将溢出时才会被回收。</p>
+<h2 id="真正宣告对象死亡的两个步骤"><a href="#真正宣告对象死亡的两个步骤" class="headerlink" title="真正宣告对象死亡的两个步骤"></a>真正宣告对象死亡的两个步骤</h2><p>　　即便是不可达的对象，也并不是非死不可，要真正宣告一个对象死亡，至少要经历两次标记过程：</p>
+<p>　　1.若对象进行可达性分析后发现没有与GC　Roots相连接的引用链，该对象将会被第一次标记并且进行一次筛选，筛选的条件为此对象是否有必要执行finalize(）方法<br>当对象没有覆盖finalize(）方法，或者finalize(）方法已经被虚拟机调用过，则虚拟机将这两种情况均视为“没有必要执行”<br>　　所谓finalize(）方法指的是一旦垃圾回收器准备好释放对象占用的存储空间，将首先调用其finalize方法，并且在下一次垃圾回收动作发生时，才会真正的回收对象占用的内存。也就是说finalize方法的调用是与垃圾回收的发生息息相关的</p>
+<p>　　2.如果虚拟机判定有必要执行finalize(）方法，对象将被放置在名为F-Queue的队列之中，此时Finalizer会对它执行finalize(）方法，但是不保证等待该对象的方法运行结束。finalize(）方法是对象逃脱死亡命运的的最后一次机会，GC将会对F-Queue队列中的对象进行第二次标记，如果在此之前该对象重新与引用链上的对象建立连接，那么会被移除出队列，如果没有逃脱，那么该对象基本没救了=。=</p>
+<h1 id="二-垃圾收集算法"><a href="#二-垃圾收集算法" class="headerlink" title="二.垃圾收集算法"></a>二.垃圾收集算法</h1><h2 id="标记-清除算法（Mark-Sweep）"><a href="#标记-清除算法（Mark-Sweep）" class="headerlink" title="标记-清除算法（Mark-Sweep）"></a>标记-清除算法（Mark-Sweep）</h2><p>　　算法分为标记、清除两个阶段，即回收过程是先标记后清除，标记的具体过程就是上面所讲述的判断对象已死亡的过程<br>　　<br>　　该算法不足之处有两点：一个是效率不高，另一个是清除后会产生大量不连续的内存碎片（如果要分配一个较大的内存对象，那么可能会因为没有足够连续的内存空间导致频繁的进行垃圾收集动作）</p>
+<h2 id="2-复制算法-Copying"><a href="#2-复制算法-Copying" class="headerlink" title="2.复制算法(Copying)"></a>2.复制算法(Copying)</h2><p>　　将可用内存分为大小相等的两块，每次只使用其中一块，当其中一块用完后，将其中所有的还存活对象复制到另一半中，然后对原来这块内存空间进行一次性的清理<br>　　<br>　　不足是使用内存的代价太高</p>
+<p>　　新生代的垃圾回收一般采用这种算法，为什么呢？因为新生代对象基本是“朝生夕死”，故存活对象所占据的内存不会很大，而且实际中的虚拟机新生代内存划分是按照Eden区与Survivor区（两个中的一个）8：1的结构划分的，也就是说内存并不是一半一半的划分，而是拥有90%的可用空间，仅仅“浪费”了10%</p>
+<p>　　那么在老年代中是否能够使用复制算法呢？答案当然是不能！我们知道老年代中的对象是长时间存活的对象，使用该算法会导致垃圾回收操作频繁执行，老年代的清理算法一般采用标记-整理算法</p>
+<h2 id="3-标记-整理算法（Mark-Compact）"><a href="#3-标记-整理算法（Mark-Compact）" class="headerlink" title="3.标记-整理算法（Mark-Compact）"></a>3.标记-整理算法（Mark-Compact）</h2><p>　　该算法的标记过程与标记-清除算法一样，但是后续步骤不是对标记的对象进行清理而是标记完对象后将所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存<br>　　<br>　　老年代一般采用这种算法，该算法解决了标记-清除算法产生不连续内存空间的问题，但是效率还是很低，不过因为老年代的GC并不频繁，故还可接受</p>
+<h2 id="4-分代收集算法（Generational-Collection）"><a href="#4-分代收集算法（Generational-Collection）" class="headerlink" title="4.分代收集算法（Generational Collection）"></a>4.分代收集算法（Generational Collection）</h2><p>　　根据对象的存活周期将内存分为几块，用来存储新生代，老年代和永久代然后对不同的区域使用不同的收集算法</p>
+<h2 id="5-HotSpot的垃圾回收算法实现"><a href="#5-HotSpot的垃圾回收算法实现" class="headerlink" title="5.HotSpot的垃圾回收算法实现"></a>5.HotSpot的垃圾回收算法实现</h2><p>　　可达性分析中存在两个问题：<br>　　1.如今应用程序仅仅方法区都十分巨大，若要逐个检查其中的引用，必然会消耗很多时间<br>　　2.进行可达性分析时，整个系统必须停顿所有的执行线程（Stop The World），不能出现分析过程中对象引用关系还在不断变化的情况</p>
+<p>　　HotSpot的解决方法<br>　　<br>　　准确式CG和OopMap数据结构</p>
+<p>　　<strong>准确式 GC</strong><br>　　虚拟机可以知道内存中某个位置的数据具体是什么类型。这样在 GC 的时候虚拟机能准确的判断堆上的数据是否还可能被使用，而不必去一个个的检查完所有的GC Roots的位置，这个功能在HotSpot虚拟机上是通过一种被称为OopMap的数据结构来实现的</p>
+<p>　　<strong>OopMap</strong><br>　　OopMap记录了栈上本地变量到堆上对象的引用关系，可以避免全栈扫描，加快枚举根节点的速度。但这并不是它的全部用意。它的另外一个更根本的作用是，可以帮助 HotSpot 实现准确式 GC 。<br>　　关于OopMap的具体解释我这里先不说了，我还需要后面好好学习学习，大体的概念就是OopMap是一张映射表，因为代码里面每个变量都是有类型的，但是编译之后的代码就只有变量在栈上的位置了，而oopMap就是一个附加的信息，告诉你栈上哪个位置本来是个什么东西<br>　　同时每个被JIT（即时编译技术，JIT编译器将字节码编译成本机机器代码）编译过后的方法也会在一些特定的位置记录下OopMap，记录了执行到该方法的某条指令的时候，栈上和寄存器里哪些位置是引用。这样GC在扫描栈的时候就会查询这些OopMap就知道哪里是引用了</p>
+<p>　　<strong>安全点</strong><br>　　虽然在OopMap的协助下，HotSpot可以快速且准确的完成GC　Roots枚举，但是因为引用关系随时在变化，OopMap数据结构不可能为每一条指令都生成对应的结构（会额外产生大量空间消耗），所以虚拟机只是在特定的位置上记录了这些信息，这些位置我们称为安全点（SafePoint）</p>
+<p><strong>安全点的意义在于程序执行时并不是在任意时刻都能停下来进行GC，只有到达安全点时才能暂停</strong></p>
+<p>　　安全点的选取有以下两个问题：<br>　　1.数量要适中，选定的标准是是否具有让程序长时间执行的特征，长时间执行的明显指令序列的复用（方法调用、循环跳转、异常跳转等），原因在于指令的执行时间非常短暂，虽然指令序列的复用可能会使指令流长度很长，但是却不太会让程序过长时间运行，那么我们就可以认为在指令序列复用的期间，我们不需要进行GC回收</p>
+<p>　　2.还需考虑的问题是如何在GC发生时让所有的线程（不包括执行JNI调用）都运行到最近的安全点上再停顿下来。这个问题有两种解决方法：抢先式中断（Preemptive Suspension）和主动式中断（Voluntary Suspension）<br>　　（1）抢先式中断<br>　　GC发生时，首先把所有线程中断，如果发现有线程中断的地方不在安全点上，就恢复线程，让它运行到安全点。现在的虚拟机基本没有使用这个方案的，因为强制中断时线程会释放所持有的锁，那么可能会导致数据混乱。<br>　　（2）主动式中断<br>　　当GC需要中断线程的时候，不直接对线程操作，仅仅简单的设置一个标志，各个线程执行的时候主动去轮询这个标志，发现中断标志为真时就自己中断挂起。设置轮询标志的地方和安全点是重合的。</p>
+<p>　　<strong>安全区域</strong><br>　　解决线程阻塞或睡眠问题</p>
+<p>　　如果一个线程被阻塞或者挂起，那么他就有可能在GC回收时运行不到安全点，因为他根本就无法响应JVM的中断请求，为了解决这个问题，我们提出了安全区域这个概念<br>　　安全区域是指在一段代码片段之中，引用关系不会发生变化，在这个区域的任意地方开始GC都是安全的<br>　　具体过程是当线程执行到Safe Region中的代码时，首先标识自己已经进入了Safe Region，那么在这段时间里JVM要发起GC时，就不用管标识自己为Safe Region状态的线程了，在线程要离开Safe Region时，他要检查系统是否已经完成了根节点枚举（或者是整个GC过程），如果完成了，那么线程就继续执行，否则他就必须等待直到收到可以安全离开Safe Region的信号为止。</p>
+<h1 id="三-垃圾收集器"><a href="#三-垃圾收集器" class="headerlink" title="三.垃圾收集器"></a>三.垃圾收集器</h1><p><strong>如果说收集算法是内存回收的方法论，那么垃圾收集器就是内存回收的具体实现</strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/18376935/14702101/3cff4a9a-07db-11e6-90ff-0a284fa27e8c.png" alt="hotspot"></p>
+<p>上图中如果两个收集器之间存在连线，就说明它们可以搭配使用，下面我们来一一介绍这几个收集器</p>
+<h2 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h2><p>　　单线程收集器，这里的单线程有两个含义：<br>　　1.只会使用一个cpu或一个垃圾收集线程去完成垃圾收集工作<br>　　2.进行垃圾收集时，必须暂停其他的所有线程</p>
+<p>　　优点：简单而高效，至今仍是虚拟机在<strong>Client模式下的默认新生代收集器</strong>（JVM运行模式分为Client和Server两种模式，Server模式启动慢但是启动后效率比Client模式高的多，一般用于服务器，Java5以上会自行判断），因为对于桌面应用来说，要整理的内存不会很大，所以时间停顿并不会很明显<br>　　缺点：单线程带来的时间停顿代价</p>
+<h2 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h2><p>　　ParNew收集器是Serial收集器的多线程版本，是Server模式下虚拟机的默认新生代收集器<br>　　<br>　　优点：多线程，能够与CMS联合使用<br>　　缺点：在单个CPU情况下的效率还没有Serial收集器高</p>
+<p>　　在这里为下文中的<strong>并行</strong>和<strong>并发</strong>两个概念做一个区分<br>　　<br>　　并行：多条垃圾收集线程并行工作，但是用户线程仍然处于等待状态<br>　　<br>　　并发：用户线程与垃圾收集线程同时工作（也有可能是交替工作），用户程序继续运行，垃圾收集线程运行在另一个CPU上</p>
+<h2 id="Parallel-Scavenge收集器"><a href="#Parallel-Scavenge收集器" class="headerlink" title="Parallel Scavenge收集器"></a>Parallel Scavenge收集器</h2><p>　　Parallel Scavenge收集器是一个新生代收集器，与以上收集器所关注的<strong>尽可能缩短垃圾收集时用户线程的停顿时间</strong>不同，Parallel Scavenge收集器关注的是达到一个可控制的吞吐量</p>
+<p>　　（吞吐量 = 运行用户代码时间 + 垃圾收集时间）</p>
+<p>　　具体参数以后实践学习时再进行详细分析吧</p>
+<h2 id="Serial-Old收集器"><a href="#Serial-Old收集器" class="headerlink" title="Serial Old收集器"></a>Serial Old收集器</h2><p>　　Serial Old收集器是Serial收集器的老年代版本，同样是单线程收集器，使用的是标记-整理算法，用于Client模式下的虚拟机</p>
+<h2 id="Parallel-Old收集器"><a href="#Parallel-Old收集器" class="headerlink" title="Parallel Old收集器"></a>Parallel Old收集器</h2><p>　　Parallel Old收集器是Parallel Scavenge收集器的老年代版本，使用多线程和“标记-整理”算法</p>
+<h2 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a>CMS收集器</h2><p>　　CMS（Concurrent Mark Sweep）收集器是一种以获取最短回收停顿时间为目标的<strong>并发</strong>收集器，基于“标记-清除”算法实现，它的标记过程分为四步<br>　　<br>　　1.初始标记：仅标记GC Roots能直接关联的对象<br>　　2.并发标记：进行GC Roots Tracing<br>　　3.重新标记：修正并发标记时因为用户线程继续运行导致标记产生变动的那一部分<br>　　4.并发清除：清理内存</p>
+<p>　　CMS收集器的缺点有3个：<br>　　<br>　　1.CMS默认启动的回收线程数是（CPU数量+3 / 4），即CPU数量越多才越能体现CMS的优势，当CPU过少时，会占用用户程序的处理能力，导致效率降低<br>　　2.CMS收集器无法处理浮动垃圾。浮动垃圾是指CMS运行过程中，用户线程也在运行，那么CMS标记后用户线程还会不断产生垃圾，这一部分的垃圾无法在这次回收操作中被清除。<br>　　3.“标记-清除”算法带来的大量空间碎片</p>
+<p>　　当然，以上的这些缺点都可以通过调参来进行优化，具体调优在以后深入学习时再总结吧=。=</p>
+<h2 id="G1收集器"><a href="#G1收集器" class="headerlink" title="G1收集器"></a>G1收集器</h2><p>　　这是最新的技术，<strong>在这里先挖个坑，以后补</strong></p>
+<h1 id="四-内存分配与回收策略"><a href="#四-内存分配与回收策略" class="headerlink" title="四.内存分配与回收策略"></a>四.内存分配与回收策略</h1><p>　　虚拟机中的堆中的内存共划分为三个代：新生代（Young Generation）、老年代（Tenured Generation）和永久代（Permanent Generation）。其中永久代主要存放的是Java类的类信息，与垃圾收集要收集的Java对象关系不大。新生代和老年代的划分是对垃圾收集影响比较大的。</p>
+<p>　　<strong>新生代:</strong><br>　　所有新生成的对象一般情况下首先都是放在新生代的（大对象比如长数组和长字符串会直接进入老年代）。新生代的目标就是尽可能快速的收集掉那些生命周期短的对象。新生代分三个区。一个Eden区，两个Survivor区(HotSpot虚拟机默认Eden区:Survivor区为8:1)。大部分对象在Eden区中生成。当Eden区满时，还存活的对象将被复制到Survivor区（两个中的一个），当这个Survivor区满时，此区的<strong>存活对象</strong>将被复制到另外一个Survivor区，然后将进行清理。根据程序需要，Survivor区是可以配置为多个的（多于两个），这样可以增加对象在新生代中的存在时间，减少被放到老年代的可能。<br>　<br>　　<strong>老年代:</strong><br>　　在新生代中经历了N次垃圾回收后仍然存活的对象，就会被放到老年代中。因此，可以认为老年代中存放的都是一些生命周期较长的对象。<br>　　那么怎么判断哪些对象该进入老年代呢？虚拟机会给每个对象定义一个对象年龄计数器。如果对象在Eden出生并经过一次GC后被Survivor区容纳，那么初始化该对象年龄为1，以后该对象在Survivor区每熬过一次Minor GC，年龄就增加一岁，当年龄增加到15岁（默认），就会被放入老年代中，当然这个限制只是对象进入老年代的一种可能，如果在Survivor空间中相同年龄所有对象大小的总和大于Survivor空间的一般，年龄大于或等于该年龄的对象就可以直接进入老年代<br>　　<br>　　<strong>永久代:</strong><br>　　用于存放静态文件，如今Java类、方法等。永久代对垃圾回收没有显著影响，但是有些应用可能动态生成或者调用一些class，例如Hibernate等，在这种时候需要设置一个比较大的永久代空间来存放这些运行过程中新增的类。<br>　　<br>　　那在什么情况下触发垃圾回收呢？<br>　　<br>    由于对象进行了分代处理，因此垃圾回收区域、时间也不一样。GC有两种类型：Minor GC和Full GC。<br>    1.Minor GC<br>    一般情况下，当新对象生成，并且在Eden申请空间失败时，就会触发Minor GC，对Eden区域进行GC，清除非存活对象，并且把尚且存活的对象移动到Survivor区。然后整理Survivor的两个区。这种方式的GC是对新生代的Eden区进行，不会影响到老年代。因为大部分对象都是从Eden区开始的，同时Eden区不会分配的很大，所以Eden区的GC会频繁进行。因而，一般在这里需要使用速度快、效率高的算法，使Eden区能尽快空闲出来。<br>    2.Full GC<br>    对整个堆进行整理，包括新生代、老年代和永久代。Full GC因为需要对整个对进行回收，所以比Scavenge GC要慢，因此应该尽可能减少Full GC的次数。在对JVM调优的过程中，很大一部分工作就是对于FullGC的调节。有如下原因可能导致Full GC：<br>　　1.老年代（Tenured）被写满<br>　　2.永久代（Perm）被写满<br>　　3.System.gc()被显示调用<br>　　4.上一次GC之后Heap的各域分配策略动态变化</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/04/20/关于背包问题的思考/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">关于背包问题的思考</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="关于JVM的GC机制学习总结" data-title="关于JVM的GC机制学习总结" data-url="http://yoursite.com/2016/04/21/关于JVM的GC机制学习总结/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"ldcrocklee"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 RockLee
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
